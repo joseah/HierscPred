@@ -1,0 +1,26 @@
+Package: HierscPred
+Type: Package
+Title: Supervised hierarchical classification for scPred
+Version: 0.1.0
+Authors@R: c(person("Lieke", "Michelsen", 
+    email = "l.c.m.michielsen@tudelft.nl",
+    role = c("aut", "cre")),
+    person("Jose", "Alquicira-Hernandez", 
+    email = "alquicirajose@gmail.com",
+    role = c("aut"), 
+    comment = c(ORCID = "0000-0002-9049-7780")))
+Description: This package provides an interface to the scPred package to 
+    perform supervised hierarchical classification
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Remotes:
+    powellgenomicslab/scPred
+Depends:
+    scPred
+Imports:
+    Seurat,
+    data.tree,
+    caret
+VignetteBuilder: knitr
+RoxygenNote: 7.1.1
