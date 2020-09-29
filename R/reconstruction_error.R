@@ -27,7 +27,6 @@ find_threshold <- function(object, labels, nfolds = 5, fn_perc = 0.01, seed = 66
   # Add a 5fold CV loop to determine the threshold for the CV
   set.seed(seed)
   folds <-  createFolds(labels, k = nfolds)
-  fold <- folds$Fold1
   build_re <- function(fold, object, fn_perc, verbose){
 
     train <-  object[,-fold]
