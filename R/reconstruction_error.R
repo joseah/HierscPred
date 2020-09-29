@@ -20,7 +20,8 @@
 #' res <- find_threshold(pbmc_1, pbmc_1$cell_type)
 #'
 
-find_threshold <- function(object, labels, nfolds = 5, fn_perc = 0.01, seed = 66, verbose = FALSE){
+find_threshold <- function(object, labels, nfolds = 5, fn_perc = 0.01,
+                           seed = 66, verbose = FALSE){
 
   default_assay <- DefaultAssay(object)
 
