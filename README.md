@@ -13,8 +13,8 @@ devtools::install_github("joseah/HierscPred")
 
 # Authors
 
-- Lieke Michelsen
-- Jose Alquicira-Hernandez
+- [Lieke Michelsen](https://github.com/lcmmichielsen)
+- [Jose Alquicira-Hernandez](https://github.com/joseah)
 
 
 
