@@ -120,14 +120,14 @@ evaluate <- function(y_true, y_pred, tree){
   
   names(F1) <- names(pop_size)
   
-  med_F1 <- median(F1)
+  MF1 <- median(F1)
   
   return(list(HF1 = HF1, 
               HF1_all = HF1_all,
               rejected = rejected,
               internal = internal,
               MF1 = MF1, 
-              F1_all = F1_all,
+              F1_all = F1,
               conf = conf,
               pop_size = pop_size))
   
