@@ -6,7 +6,8 @@
 #' @param y_pred vector with predicted labels
 #' @param tree data.tree object storing the hierarchy used during classification
 #' @return A list containing the different evaluation metrics (median HF1-score, HF1-score per cell population,
-#' median F1-score, F1-score per cell population, % rejected cells, % internally labeled cells)
+#' median F1-score, F1-score per cell population, % rejected cells, % internally labeled cells, confusion matrix
+#' and population size)
 #' @export
 #' @examples
 #'

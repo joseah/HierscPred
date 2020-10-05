@@ -15,7 +15,8 @@ evaluate(y_true, y_pred, tree)
 }
 \value{
 A list containing the different evaluation metrics (median HF1-score, HF1-score per cell population,
-median F1-score, F1-score per cell population, % rejected cells, % internally labeled cells)
+median F1-score, F1-score per cell population, % rejected cells, % internally labeled cells, confusion matrix
+and population size)
 }
 \description{
 Calculated hierarchical F1-score, median F1-score, percentage of rejected cells, 
