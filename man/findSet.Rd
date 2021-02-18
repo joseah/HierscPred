@@ -25,5 +25,5 @@ nodeSet <- findSet('B cells', tree)
 
 }
 \author{
-Lieke Michelsen and Jose Alquicira-Hernandez
+Lieke Michielsen and Jose Alquicira-Hernandez
 }

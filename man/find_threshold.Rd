@@ -31,7 +31,7 @@ A numeric value corresponding to the threshold for reconstruction
 error
 }
 \description{
-Determins threshold for reconstruction errors computed from
+Determines threshold for reconstruction errors computed from
 multiple resamples
 }
 \examples{
@@ -42,5 +42,5 @@ res <- find_threshold(pbmc_1, pbmc_1$cell_type)
 
 }
 \author{
-Lieke Michelsen and Jose Alquicira-Hernandez
+Lieke Michielsen and Jose Alquicira-Hernandez
 }

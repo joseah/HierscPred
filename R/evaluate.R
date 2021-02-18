@@ -1,7 +1,7 @@
 #' @title Evaluate performance of hierarchical classifier
 #' @description Calculated hierarchical F1-score, median F1-score, percentage of rejected cells, 
 #' percentage of internally labeled cells, confusion matrix, and population size
-#' @author Lieke Michelsen and Jose Alquicira-Hernandez
+#' @author Lieke Michielsen and Jose Alquicira-Hernandez
 #' @param y_true vector with true labels
 #' @param y_pred vector with predicted labels
 #' @param tree data.tree object storing the hierarchy used during classification
@@ -136,7 +136,7 @@ evaluate <- function(y_true, y_pred, tree){
 
 #' @title Find ancestor of a node in the tree
 #' @description Return a set containing the node itself and its ancestors
-#' @author Lieke Michelsen and Jose Alquicira-Hernandez
+#' @author Lieke Michielsen and Jose Alquicira-Hernandez
 #' @param name name of the node
 #' @param tree data.tree object storing the hierarchy used during classification
 #' @return A set containing the name of the node and its ancestors

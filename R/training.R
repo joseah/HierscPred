@@ -1,6 +1,6 @@
 #' @title Create hierarchical tree
 #' @description Creates a tree object representing a cell-type hierarchy
-#' @author Lieke Michelsen and Jose Alquicira-Hernandez
+#' @author Lieke Michielsen and Jose Alquicira-Hernandez
 #' @param branches A character vector containing \code{n} number of branches.
 #' Each branch corresponds to a cell type. Each level is delimited by  "/"
 #' character. For example, the following branch is composed by three levels
@@ -32,7 +32,7 @@ create_hierarchy <- function(branches){
 
 #' @title Create hierarchical tree
 #' @description Creates a tree object representing a cell-type hierarchy
-#' @author Lieke Michelsen and Jose Alquicira-Hernandez
+#' @author Lieke Michielsen and Jose Alquicira-Hernandez
 #' @param tree Hierarchy created via \code{create_hierarchy}
 #' @param data Seurat object containing cells used to train hierarchical models
 #' @param pvar Prediction variable. Column name in Seurat object metadata
@@ -81,7 +81,7 @@ train_tree <- function(data,
 
 #' @title Create hierarchical tree
 #' @description Creates a tree object representing a cell-type hierarchy
-#' @author Lieke Michelsen and Jose Alquicira-Hernandez
+#' @author Lieke Michielsen and Jose Alquicira-Hernandez
 #' @param tree Hierarchy created via \code{create_hierarchy}
 #' @param data Seurat object containing cells used to train hierarchical models
 #' @param pvar Prediction variable. Column name in Seurat object metadata

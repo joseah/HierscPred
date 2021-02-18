@@ -47,5 +47,5 @@ train_tree(data, h)
 
 }
 \author{
-Lieke Michelsen and Jose Alquicira-Hernandez
+Lieke Michielsen and Jose Alquicira-Hernandez
 }

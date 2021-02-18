@@ -30,5 +30,5 @@ res <- evaluate(y_true, y_pred, tree)
 
 }
 \author{
-Lieke Michelsen and Jose Alquicira-Hernandez
+Lieke Michielsen and Jose Alquicira-Hernandez
 }

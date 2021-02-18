@@ -1,7 +1,7 @@
 #' @title Find threshold for reconstruction error
-#' @description Determins threshold for reconstruction errors computed from
+#' @description Determines threshold for reconstruction errors computed from
 #' multiple resamples
-#' @author Lieke Michelsen and Jose Alquicira-Hernandez
+#' @author Lieke Michielsen and Jose Alquicira-Hernandez
 #' @param object Seurat object used as reference
 #' @param labels Response variable
 #' @param nfolds Number of resamples
