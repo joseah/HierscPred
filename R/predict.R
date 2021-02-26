@@ -122,8 +122,9 @@ reconstructionError <- function(newData, spmodel, RE_threshold){
   ref_loadings <- ref_loadings[shared_features,]
   
   new_data <- GetAssayData(newData, "data")[shared_features,]
-  means <- spmodel@scaling$means
-  stdevs  <- spmodel@scaling$stdevs
+  shared_scaling <- spmodel@scaling[shared_features,]
+  means <- shared_scaling$means
+  stdevs  <- shared_scaling$stdevs
   new_data <- Matrix::t(new_data)
   
   scaled_data <- scale(new_data, means, stdevs)
