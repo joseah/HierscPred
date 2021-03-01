@@ -85,6 +85,7 @@ predictNode <- function(tree, newData, threshold, recompute_alignment){
 	  if(sum(idxChildren > 0)){
 	    print(c)
 	    print(idxChildren)
+	    print(Cells(newData)[idxChildren])
 	    
 		  dataSubset <- subset(newData, cells = Cells(newData)[idxChildren])
 		  
