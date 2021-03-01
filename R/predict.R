@@ -83,13 +83,14 @@ predictNode <- function(tree, newData, threshold, recompute_alignment){
       namesChildren <- as.vector(c$Get('name'))
       idxChildren <- newData$scpred_prediction %in% namesChildren
 	  if(sum(idxChildren > 0)){
-		  dataSubset <- subset(newData, cells = Cells(newData)[idxChildren])
+		print(c)
+		dataSubset <- subset(newData, cells = Cells(newData)[idxChildren])
 		  
-		  # Predict labels
-		  dataSubset <- predictNode(c, dataSubset, threshold, recompute_alignment)
+		# Predict labels
+		dataSubset <- predictNode(c, dataSubset, threshold, recompute_alignment)
 		  
-		  # Add labels to original object
-		  newData$scpred_prediction[idxChildren] <- dataSubset$scpred_prediction
+		# Add labels to original object
+		newData$scpred_prediction[idxChildren] <- dataSubset$scpred_prediction
       }
     }
   }
