@@ -82,7 +82,7 @@ predictNode <- function(tree, newData, threshold, recompute_alignment){
       # Get subset of the data
       namesChildren <- as.vector(c$Get('name'))
       idxChildren <- newData$scpred_prediction %in% namesChildren
-	  if(sum(idxChildren > 0){
+	  if(sum(idxChildren > 0)){
 		  dataSubset <- subset(newData, cells = Cells(newData)[idxChildren])
 		  
 		  # Predict labels
