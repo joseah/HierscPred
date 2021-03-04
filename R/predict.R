@@ -51,12 +51,15 @@ predictNode <- function(tree, newData, threshold, recompute_alignment){
   
   # Check if reconstruction error was used during training
   if(tree$RE){
-
+    
+    print('Reconstruction Error')
     RE_rejected = reconstructionError(newData, tree$model, tree$RE)
     
     RE_rejected_idx = which(RE_rejected)
+    print(length(RE_rejected_idx))
     RE_notrejected_idx = which(!RE_rejected)
-
+    print(length(RE_notrejected_idx))
+    
     # Make predictions (only for cells that are not rejected!)
     newData1 <- newData[,RE_notrejected_idx]
     newData1 <- scPredict(newData1, tree$model, threshold = threshold, recompute_alignment = recompute_alignment)
@@ -83,10 +86,7 @@ predictNode <- function(tree, newData, threshold, recompute_alignment){
       namesChildren <- as.vector(c$Get('name'))
       idxChildren <- newData$scpred_prediction %in% namesChildren
 	  if(sum(idxChildren > 0)){
-	    print(c)
-	    print(idxChildren)
-	    print(Cells(newData)[idxChildren])
-	    
+
 		  dataSubset <- subset(newData, cells = Cells(newData)[idxChildren])
 		  
 		  # Predict labels
