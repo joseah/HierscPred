@@ -41,6 +41,7 @@ create_hierarchy <- function(branches){
 #' the feature space. Default: "pca"
 #' @param model Classification model supported via caret package.
 #' A list of all models can be found here in https://topepo.github.io/caret/available-models.html
+#' @param allowParallel Allow parallel processing for resampling?
 #' @param reconstruction_error Use reconstruction error?
 #' @param fn_perc TBD
 #' @return A data.tree object containing the cell type hierarchy
@@ -56,7 +57,7 @@ train_tree <- function(data,
                        tree,
                        pvar = 'cell_type',
                        reduction = 'pca',
-                       model = 'svmRadial',
+                       model = 'svmRadial', allowParallel = FALSE,
                        reconstruction_error = TRUE,
                        fn_perc = 0.01,
                        verbose = FALSE){
@@ -74,7 +75,7 @@ train_tree <- function(data,
 
   #labels <- data[[pVar]]
 
-  tree <-  train_node(tree, data, pvar, reduction, model,
+  tree <-  train_node(tree, data, pvar, reduction, model, allowParallel,
                       reconstruction_error, fn_perc, verbose)
   tree
 }
@@ -90,6 +91,7 @@ train_tree <- function(data,
 #' the feature space. Default: "pca"
 #' @param model Classification model supported via caret package.
 #' A list of all models can be found here in https://topepo.github.io/caret/available-models.html
+#' @param allowParallel Allow parallel processing for resampling?
 #' @param reconstruction_error Use reconstruction error?
 #' @param fn_perc TBD
 #' @return A data.tree object containing the cell type hierarchy
@@ -105,7 +107,7 @@ train_tree <- function(data,
 #'
 
 
-train_node <- function(tree, data, pvar, reduction, model,
+train_node <- function(tree, data, pvar, reduction, model, allowParallel,
                        reconstruction_error, fn_perc, verbose){
 
   cat("Training parent node: ", tree$name, "\n", sep = "")
@@ -139,7 +141,7 @@ train_node <- function(tree, data, pvar, reduction, model,
       paste(unique(new_labels), collapse = "\n- "))
   ## get informative PCs and train classifier
   data <- getFeatureSpace(data, pvar = "response", reduction = reduction)
-  data <- trainModel(data, model = model)
+  data <- trainModel(data, model = model, allowParallel = allowParallel)
 
   message("Model trained")
   tree$model <- get_scpred(data)
@@ -155,7 +157,7 @@ train_node <- function(tree, data, pvar, reduction, model,
       data_subset <- subset(data, cells = Cells(data)[idx_children])
 
       # Do PCA on this node and continue with children
-      train_node(c, data_subset, pvar, reduction, model,
+      train_node(c, data_subset, pvar, reduction, model, allowParallel,
                 reconstruction_error, fn_perc, verbose)
 
     }
