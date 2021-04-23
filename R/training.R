@@ -39,6 +39,8 @@ create_hierarchy <- function(branches){
 #' containing the cell labels of the terminal nodes of the hierarchy tree
 #' @param reduction Name of reduction in Seurat objet to be used to determine
 #' the feature space. Default: "pca"
+#' @param scaledata Whether to select variable features and 
+#' scale the data of the reference object. Default: FALSE
 #' @param model Classification model supported via caret package.
 #' A list of all models can be found here in https://topepo.github.io/caret/available-models.html
 #' @param allowParallel Allow parallel processing for resampling?
@@ -56,7 +58,7 @@ create_hierarchy <- function(branches){
 train_tree <- function(data,
                        tree,
                        pvar = 'cell_type',
-                       reduction = 'pca',
+                       reduction = 'pca', scaledata = FALSE,
                        model = 'svmRadial', allowParallel = FALSE,
                        reconstruction_error = TRUE,
                        fn_perc = 0.01,
@@ -75,7 +77,7 @@ train_tree <- function(data,
 
   #labels <- data[[pVar]]
 
-  tree <-  train_node(tree, data, pvar, reduction, model, allowParallel,
+  tree <-  train_node(tree, data, pvar, reduction, scaledata, model, allowParallel,
                       reconstruction_error, fn_perc, verbose)
   tree
 }
@@ -89,6 +91,8 @@ train_tree <- function(data,
 #' containing the cell labels of the terminal nodes of the hierarchy tree
 #' @param reduction Name of reduction in Seurat objet to be used to determine
 #' the feature space. Default: "pca"
+#' #' @param scaledata Whether to select variable features and 
+#' scale the data of the reference object. Default: FALSE
 #' @param model Classification model supported via caret package.
 #' A list of all models can be found here in https://topepo.github.io/caret/available-models.html
 #' @param allowParallel Allow parallel processing for resampling?
@@ -107,7 +111,7 @@ train_tree <- function(data,
 #'
 
 
-train_node <- function(tree, data, pvar, reduction, model, allowParallel,
+train_node <- function(tree, data, pvar, reduction, scaledata, model, allowParallel,
                        reconstruction_error, fn_perc, verbose){
 
   cat("Training parent node: ", tree$name, "\n", sep = "")
@@ -123,7 +127,7 @@ train_node <- function(tree, data, pvar, reduction, model, allowParallel,
   }
 
   if(verbose) message("Running PCA...")
-  data <- do_pca(data)
+  data <- do_pca(data, scaledata = scaledata)
 
   ## First rewrite the labels
   for(c in tree$children){
@@ -157,7 +161,7 @@ train_node <- function(tree, data, pvar, reduction, model, allowParallel,
       data_subset <- subset(data, cells = Cells(data)[idx_children])
 
       # Do PCA on this node and continue with children
-      train_node(c, data_subset, pvar, reduction, model, allowParallel,
+      train_node(c, data_subset, pvar, reduction, scaledata, model, allowParallel,
                 reconstruction_error, fn_perc, verbose)
 
     }

@@ -9,7 +9,9 @@ train_tree(
   tree,
   pvar = "cell_type",
   reduction = "pca",
+  scaledata = FALSE,
   model = "svmRadial",
+  allowParallel = FALSE,
   reconstruction_error = TRUE,
   fn_perc = 0.01,
   verbose = FALSE
@@ -26,8 +28,13 @@ containing the cell labels of the terminal nodes of the hierarchy tree}
 \item{reduction}{Name of reduction in Seurat objet to be used to determine
 the feature space. Default: "pca"}
 
+\item{scaledata}{Whether to select variable features and 
+scale the data of the reference object. Default: FALSE}
+
 \item{model}{Classification model supported via caret package.
 A list of all models can be found here in https://topepo.github.io/caret/available-models.html}
+
+\item{allowParallel}{Allow parallel processing for resampling?}
 
 \item{reconstruction_error}{Use reconstruction error?}
 

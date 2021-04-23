@@ -9,7 +9,9 @@ train_node(
   data,
   pvar,
   reduction,
+  scaledata,
   model,
+  allowParallel,
   reconstruction_error,
   fn_perc,
   verbose
@@ -24,10 +26,14 @@ train_node(
 containing the cell labels of the terminal nodes of the hierarchy tree}
 
 \item{reduction}{Name of reduction in Seurat objet to be used to determine
-the feature space. Default: "pca"}
+the feature space. Default: "pca"
+#' @param scaledata Whether to select variable features and 
+scale the data of the reference object. Default: FALSE}
 
 \item{model}{Classification model supported via caret package.
 A list of all models can be found here in https://topepo.github.io/caret/available-models.html}
+
+\item{allowParallel}{Allow parallel processing for resampling?}
 
 \item{reconstruction_error}{Use reconstruction error?}
 
