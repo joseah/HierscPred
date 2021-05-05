@@ -21,7 +21,7 @@
 #'
 
 find_threshold <- function(object, labels, nfolds = 5, fn_perc = 0.01,
-                           seed = 66, verbose = FALSE){
+                           seed = 66, scaledata = FALSE, verbose = FALSE){
 
   default_assay <- DefaultAssay(object)
 
@@ -34,7 +34,7 @@ find_threshold <- function(object, labels, nfolds = 5, fn_perc = 0.01,
     test <-  object[,fold]
 
     # PCA on train, get feature loadings
-    train <-  do_pca(train, verbose = verbose)
+    train <-  do_pca(train, verbose = verbose, scaledata = TRUE)
 
     # Get loadings and scaling info
     loadings <- Loadings(train, "pca")

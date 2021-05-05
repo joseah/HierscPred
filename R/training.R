@@ -121,7 +121,7 @@ train_node <- function(tree, data, pvar, reduction, scaledata, model, allowParal
 
   if(reconstruction_error){
       message("Determining reconstruction error threshold...")
-    tree$RE <- find_threshold(data, labels, fn_perc = fn_perc, verbose = verbose)
+    tree$RE <- find_threshold(data, labels, fn_perc = fn_perc, scaledata = scaledata, verbose = verbose)
   } else {
     tree$RE <- FALSE
   }
