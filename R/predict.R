@@ -3,11 +3,11 @@
 #' @author Lieke Michielsen and Jose Alquicira-Hernandez
 #' @param tree data.tree object storing the hierarchy and trained classifiers per layer
 #' @param newData Seurat object containing cells to annotate
-#' @param threshold Threshold used for probabilities to classify cells into classes. All cells below 
-#' this threshold value will be labels as "unassigned". 
+#' @param threshold Threshold used for probabilities to classify cells into classes. All cells below
+#' this threshold value will be labels as "unassigned".
 #' @param recompute_alignment Recompute alignment?
-#' @return A Seurat object with additional metadata columns with prediction probabilities associated to each 
-#' class, a \code{prediction} column, indicating the classification based on the provided threshold and 
+#' @return A Seurat object with additional metadata columns with prediction probabilities associated to each
+#' class, a \code{prediction} column, indicating the classification based on the provided threshold and
 #' a \code{generic_class} column without "unassigned" labels.
 #' @export
 #' @examples
@@ -19,11 +19,11 @@
 
 
 predictTree <- function(tree, newData, threshold = 0.75, recompute_alignment = TRUE){
-  
+
   newData <- predictNode(tree, newData, threshold, recompute_alignment)
-  
+
   newData
-  
+
 }
 
 
@@ -32,11 +32,11 @@ predictTree <- function(tree, newData, threshold = 0.75, recompute_alignment = T
 #' @author Lieke Michielsen and Jose Alquicira-Hernandez
 #' @param tree data.tree object storing the hierarchy and trained classifiers per layer
 #' @param newData Seurat object containing cells to annotate
-#' @param threshold Threshold used for probabilities to classify cells into classes. All cells below 
-#' this threshold value will be labels as "unassigned". 
+#' @param threshold Threshold used for probabilities to classify cells into classes. All cells below
+#' this threshold value will be labels as "unassigned".
 #' @param recompute_alignment Recompute alignment?
-#' @return A Seurat object with additional metadata columns with prediction probabilities associated to each 
-#' class, a \code{prediction} column, indicating the classification based on the provided threshold and 
+#' @return A Seurat object with additional metadata columns with prediction probabilities associated to each
+#' class, a \code{prediction} column, indicating the classification based on the provided threshold and
 #' a \code{generic_class} column without "unassigned" labels.
 #' @importFrom scPred scPredict
 #' @export
@@ -48,42 +48,45 @@ predictTree <- function(tree, newData, threshold = 0.75, recompute_alignment = T
 
 # Iterate over the nodes recursively
 predictNode <- function(tree, newData, threshold, recompute_alignment){
-  
+
   # Check if reconstruction error was used during training
   if(tree$RE){
-    
+
     print('Reconstruction Error')
     RE_rejected = reconstructionError(newData, tree$model, tree$RE)
-    
+
     RE_rejected_idx = which(RE_rejected)
     print(length(RE_rejected_idx))
     RE_notrejected_idx = which(!RE_rejected)
     print(length(RE_notrejected_idx))
-    
+
     # Make predictions (only for cells that are not rejected!)
+    newData1 <- newData[,RE_notrejected_idx]
+    newData1 <- scPredict(newData1, tree$model, threshold = threshold, recompute_alignment = recompute_alignment)
+
     newData$scpred_prediction = ''
     if(length(RE_notrejected_idx) > 0){
-      
+
       newData1 <- newData[,RE_notrejected_idx]
       newData1 <- scPredict(newData1, tree$model, threshold = threshold, recompute_alignment = recompute_alignment)
-      
+
       newData$scpred_prediction[RE_notrejected_idx] = newData1$scpred_prediction
-      
+
     }
-    
+
     newData$scpred_prediction[RE_rejected_idx] = 'unassigned'
-    
+
   } else{
-    
+
     newData <- scPredict(newData, tree$model, threshold = threshold, recompute_alignment = recompute_alignment)
-    
+
   }
-  
+
   # Assign cells to parent node if they are unassigned
   newData$scpred_prediction <- ifelse(newData$scpred_prediction == "unassigned", tree$name, newData$scpred_prediction)
-  
+
   for(c in tree$children){
-    
+
     # If c is not a leaf node, continue with predictions
     if(!isLeaf(c)){
 
@@ -93,18 +96,18 @@ predictNode <- function(tree, newData, threshold, recompute_alignment){
 	  if(sum(idxChildren > 0)){
 
 		  dataSubset <- subset(newData, cells = Cells(newData)[idxChildren])
-		  
+
 		  # Predict labels
 		  dataSubset <- predictNode(c, dataSubset, threshold, recompute_alignment)
-		  
+
 		  # Add labels to original object
 		  newData$scpred_prediction[idxChildren] <- dataSubset$scpred_prediction
       }
     }
   }
-  
-  newData    
-  
+
+  newData
+
 }
 
 #' @title Reject cells based on reconstruction error
@@ -122,36 +125,35 @@ predictNode <- function(tree, newData, threshold, recompute_alignment){
 
 
 reconstructionError <- function(newData, spmodel, RE_threshold){
-  
+
   ref_loadings <- spmodel@feature_loadings
   new_features <- rownames(newData)
   reference_features <- rownames(ref_loadings)
-  
+
   shared_features <- intersect(reference_features, new_features)
-  
+
   ref_loadings <- ref_loadings[shared_features,]
-  
+
   new_data <- GetAssayData(newData, "data")[shared_features,]
   shared_scaling <- spmodel@scaling[shared_features,]
   means <- shared_scaling$means
   stdevs  <- shared_scaling$stdevs
   new_data <- Matrix::t(new_data)
-  
+
   scaled_data <- scale(new_data, means, stdevs)
   new_embeddings <- scaled_data %*% ref_loadings
-  
+
   new_inverse = new_embeddings %*% t(ref_loadings)
-  
+
   new_inverse = new_inverse[, order(colnames(new_inverse))]
-  
+
   new_original = as.matrix(scaled_data[, order(colnames(scaled_data))])
-  
+
   RE = new_inverse - new_original
   RE = RE ^ 2
   RE = rowSums(RE)
   RE = sqrt(RE)
-  
-  return(RE > RE_threshold)
-  
-}
 
+  return(RE > RE_threshold)
+
+}
