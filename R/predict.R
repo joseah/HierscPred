@@ -80,7 +80,7 @@ predictNode <- function(tree, newData, threshold, recompute_alignment){
   }
   
   # Assign cells to parent node if they are unassigned
-  newData$scpred_prediction <- if_else(newData$scpred_prediction == "unassigned", tree$name, newData$scpred_prediction)
+  newData$scpred_prediction <- ifelse(newData$scpred_prediction == "unassigned", tree$name, newData$scpred_prediction)
   
   for(c in tree$children){
     
