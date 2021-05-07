@@ -61,9 +61,6 @@ predictNode <- function(tree, newData, threshold, recompute_alignment){
     print(length(RE_notrejected_idx))
 
     # Make predictions (only for cells that are not rejected!)
-    newData1 <- newData[,RE_notrejected_idx]
-    newData1 <- scPredict(newData1, tree$model, threshold = threshold, recompute_alignment = recompute_alignment)
-
     newData$scpred_prediction = ''
     if(length(RE_notrejected_idx) > 0){
 
