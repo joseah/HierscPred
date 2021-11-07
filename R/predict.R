@@ -49,35 +49,9 @@ predictTree <- function(tree, newData, threshold = 0.75, recompute_alignment = T
 # Iterate over the nodes recursively
 predictNode <- function(tree, newData, threshold, recompute_alignment){
 
-  # Check if reconstruction error was used during training
-  if(tree$RE){
 
-    print('Reconstruction Error')
-    RE_rejected = reconstructionError(newData, tree$model, tree$RE)
+  newData <- scPredict(newData, tree$model, threshold = threshold, recompute_alignment = recompute_alignment)
 
-    RE_rejected_idx = which(RE_rejected)
-    print(length(RE_rejected_idx))
-    RE_notrejected_idx = which(!RE_rejected)
-    print(length(RE_notrejected_idx))
-
-    # Make predictions (only for cells that are not rejected!)
-    newData$scpred_prediction = ''
-    if(length(RE_notrejected_idx) > 0){
-
-      newData1 <- newData[,RE_notrejected_idx]
-      newData1 <- scPredict(newData1, tree$model, threshold = threshold, recompute_alignment = recompute_alignment)
-
-      newData$scpred_prediction[RE_notrejected_idx] = newData1$scpred_prediction
-
-    }
-
-    newData$scpred_prediction[RE_rejected_idx] = 'unassigned'
-
-  } else{
-
-    newData <- scPredict(newData, tree$model, threshold = threshold, recompute_alignment = recompute_alignment)
-
-  }
 
   # Assign cells to parent node if they are unassigned
   newData$scpred_prediction <- ifelse(newData$scpred_prediction == "unassigned", tree$name, newData$scpred_prediction)
@@ -104,53 +78,5 @@ predictNode <- function(tree, newData, threshold, recompute_alignment){
   }
 
   newData
-
-}
-
-#' @title Reject cells based on reconstruction error
-#' @description Recursive function to predict the labels of a dataset using a tree object
-#' @author Lieke Michielsen and Jose Alquicira-Hernandez
-#' @param newData Seurat object containing cells to annotate
-#' @param spmodel scPred model
-#' @param RE_threshold Threshold for the reconstruction error. If the reconstruction error of a cell is above this threshold
-#' it is rejected. This threshold is determined during the training step.
-#' @return A boolean vector indicating which cells are rejected.
-#' @export
-#' @examples
-#'
-
-
-
-reconstructionError <- function(newData, spmodel, RE_threshold){
-
-  ref_loadings <- spmodel@feature_loadings
-  new_features <- rownames(newData)
-  reference_features <- rownames(ref_loadings)
-
-  shared_features <- intersect(reference_features, new_features)
-
-  ref_loadings <- ref_loadings[shared_features,]
-
-  new_data <- GetAssayData(newData, "data")[shared_features,]
-  shared_scaling <- spmodel@scaling[shared_features,]
-  means <- shared_scaling$means
-  stdevs  <- shared_scaling$stdevs
-  new_data <- Matrix::t(new_data)
-
-  scaled_data <- scale(new_data, means, stdevs)
-  new_embeddings <- scaled_data %*% ref_loadings
-
-  new_inverse = new_embeddings %*% t(ref_loadings)
-
-  new_inverse = new_inverse[, order(colnames(new_inverse))]
-
-  new_original = as.matrix(scaled_data[, order(colnames(scaled_data))])
-
-  RE = new_inverse - new_original
-  RE = RE ^ 2
-  RE = rowSums(RE)
-  RE = sqrt(RE)
-
-  return(RE > RE_threshold)
 
 }
