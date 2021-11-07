@@ -79,7 +79,8 @@ train_tree <- function(data,
 
   #labels <- data[[pVar]]
 
-  tree <-  train_node(tree, data, pvar, reduction, scaledata, model, allowParallel,
+  tree <-  train_node(tree, data, pvar, reduction, scaledata, selection.method,
+                      model, allowParallel,
                       reconstruction_error, fn_perc, verbose)
   tree
 }
