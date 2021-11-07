@@ -59,11 +59,10 @@ create_hierarchy <- function(branches){
 train_tree <- function(data,
                        tree,
                        pvar = 'cell_type',
-                       reduction = 'pca', scaledata = FALSE,
-                       selection.method = 'vst',
-                       model = 'svmRadial', allowParallel = FALSE,
-                       reconstruction_error = TRUE,
-                       fn_perc = 0.01,
+                       reduction = 'pca',
+                       scaledata = FALSE,
+                       model = 'svmRadial',
+                       allowParallel = FALSE,
                        verbose = FALSE){
 
   meta_vars <- colnames(data[[]])
@@ -79,9 +78,8 @@ train_tree <- function(data,
 
   #labels <- data[[pVar]]
 
-  tree <-  train_node(tree, data, pvar, reduction, scaledata, selection.method,
-                      model, allowParallel,
-                      reconstruction_error, fn_perc, verbose)
+  tree <-  train_node(tree, data, pvar, reduction, scaledata,
+                      model, allowParallel, verbose)
   tree
 }
 
@@ -96,12 +94,10 @@ train_tree <- function(data,
 #' the feature space. Default: "pca"
 #' @param scaledata Whether to select variable features and
 #' scale the data of the reference object. Default: FALSE
-#' @param selection.method \code{vst}, \code{mean.var.plot}, or \code{dispersion}
 #' @param model Classification model supported via caret package.
 #' A list of all models can be found here in https://topepo.github.io/caret/available-models.html
 #' @param allowParallel Allow parallel processing for resampling?
-#' @param reconstruction_error Use reconstruction error?
-#' @param fn_perc TBD
+#' @param verbose Print Seurat messages
 #' @return A data.tree object containing the cell type hierarchy
 #' @importFrom scPred getFeatureSpace trainModel get_scpred
 #' @importFrom Seurat Cells
@@ -115,24 +111,16 @@ train_tree <- function(data,
 #'
 
 
-train_node <- function(tree, data, pvar, reduction, scaledata, selection.method,
-                       model, allowParallel,
-                       reconstruction_error, fn_perc, verbose){
+train_node <- function(tree, data, pvar, reduction, scaledata,
+                       model, allowParallel, verbose){
 
   cat("Training parent node: ", tree$name, "\n", sep = "")
 
   labels <- data[[pvar, drop = TRUE]]
   new_labels <- labels
 
-  if(reconstruction_error){
-      message("Determining reconstruction error threshold...")
-    tree$RE <- find_threshold(data, labels, fn_perc = fn_perc, scaledata = scaledata, verbose = verbose)
-  } else {
-    tree$RE <- FALSE
-  }
-
   if(verbose) message("Running PCA...")
-  data <- do_pca(data, scaledata = scaledata, selection.method = selection.method)
+  data <- do_pca(data, scaledata = scaledata)
 
   ## First rewrite the labels
   for(c in tree$children){
@@ -166,8 +154,7 @@ train_node <- function(tree, data, pvar, reduction, scaledata, selection.method,
       data_subset <- subset(data, cells = Cells(data)[idx_children])
 
       # Do PCA on this node and continue with children
-      train_node(c, data_subset, pvar, reduction, scaledata, model, allowParallel,
-                reconstruction_error, fn_perc, verbose)
+      train_node(c, data_subset, pvar, reduction, scaledata, model, allowParallel, verbose)
 
     }
 

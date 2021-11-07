@@ -1,4 +1,4 @@
-do_pca <- function(data, verbose = FALSE, scaledata = FALSE, selection.method = 'vst'){
+do_pca <- function(data, verbose = FALSE, scaledata = FALSE){
 
   if(ncol(data) < 50){
     npcs <- ncol(data) - 2
@@ -7,7 +7,7 @@ do_pca <- function(data, verbose = FALSE, scaledata = FALSE, selection.method = 
   }
 
   if (scaledata){
-    data <- FindVariableFeatures(data, selection.method = selection.method, verbose = verbose)
+    data <- FindVariableFeatures(data, verbose = verbose)
     data <- ScaleData(data, verbose = verbose)
 
   }
