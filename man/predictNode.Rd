@@ -11,14 +11,14 @@ predictNode(tree, newData, threshold, recompute_alignment)
 
 \item{newData}{Seurat object containing cells to annotate}
 
-\item{threshold}{Threshold used for probabilities to classify cells into classes. All cells below 
+\item{threshold}{Threshold used for probabilities to classify cells into classes. All cells below
 this threshold value will be labels as "unassigned".}
 
 \item{recompute_alignment}{Recompute alignment?}
 }
 \value{
-A Seurat object with additional metadata columns with prediction probabilities associated to each 
-class, a \code{prediction} column, indicating the classification based on the provided threshold and 
+A Seurat object with additional metadata columns with prediction probabilities associated to each
+class, a \code{prediction} column, indicating the classification based on the provided threshold and
 a \code{generic_class} column without "unassigned" labels.
 }
 \description{
