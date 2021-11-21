@@ -5,7 +5,7 @@
 #' @param newData Seurat object containing cells to annotate
 #' @param threshold Threshold used for probabilities to classify cells into classes. All cells below
 #' this threshold value will be labels as "unassigned".
-#' @param recompute_alignment Recompute alignment?
+#' @param max.iter.harmony Maximum number of clustering iterations by harmony
 #' @return A Seurat object with additional metadata columns with prediction probabilities associated to each
 #' class, a \code{prediction} column, indicating the classification based on the provided threshold and
 #' a \code{generic_class} column without "unassigned" labels.
@@ -18,9 +18,9 @@
 #' dataTest <- predictTree(h, dataTest)
 
 
-predictTree <- function(tree, newData, threshold = 0.75, recompute_alignment = TRUE){
+predictTree <- function(tree, newData, threshold = 0, max.iter.harmony = 10){
 
-  newData <- predictNode(tree, newData, threshold, recompute_alignment)
+  newData <- predictNode(tree, newData, threshold, max.iter.harmony = max.iter.harmony)
 
   newData
 
@@ -34,7 +34,7 @@ predictTree <- function(tree, newData, threshold = 0.75, recompute_alignment = T
 #' @param newData Seurat object containing cells to annotate
 #' @param threshold Threshold used for probabilities to classify cells into classes. All cells below
 #' this threshold value will be labels as "unassigned".
-#' @param recompute_alignment Recompute alignment?
+#' @param max.iter.harmony Maximum number of clustering iterations by harmony
 #' @return A Seurat object with additional metadata columns with prediction probabilities associated to each
 #' class, a \code{prediction} column, indicating the classification based on the provided threshold and
 #' a \code{generic_class} column without "unassigned" labels.
@@ -47,10 +47,10 @@ predictTree <- function(tree, newData, threshold = 0.75, recompute_alignment = T
 
 
 # Iterate over the nodes recursively
-predictNode <- function(tree, newData, threshold, recompute_alignment){
+predictNode <- function(tree, newData, threshold, max.iter.harmony){
 
 
-  newData <- scPredict(newData, tree$model, threshold = threshold, recompute_alignment = recompute_alignment)
+  newData <- scPredict(newData, tree$model, threshold = threshold, max.iter.harmony = max.iter.harmony)
 
 
   # Assign cells to parent node if they are unassigned
@@ -69,7 +69,7 @@ predictNode <- function(tree, newData, threshold, recompute_alignment){
 		  dataSubset <- subset(newData, cells = Cells(newData)[idxChildren])
 
 		  # Predict labels
-		  dataSubset <- predictNode(c, dataSubset, threshold, recompute_alignment)
+		  dataSubset <- predictNode(c, dataSubset, threshold, max.iter.harmony)
 
 		  # Add labels to original object
 		  newData$scpred_prediction[idxChildren] <- dataSubset$scpred_prediction
