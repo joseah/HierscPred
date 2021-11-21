@@ -4,7 +4,7 @@
 \alias{predictTree}
 \title{Predict labels of a dataset}
 \usage{
-predictTree(tree, newData, threshold = 0.75, recompute_alignment = TRUE)
+predictTree(tree, newData, threshold = 0, max.iter.harmony = 10)
 }
 \arguments{
 \item{tree}{data.tree object storing the hierarchy and trained classifiers per layer}
@@ -14,7 +14,7 @@ predictTree(tree, newData, threshold = 0.75, recompute_alignment = TRUE)
 \item{threshold}{Threshold used for probabilities to classify cells into classes. All cells below
 this threshold value will be labels as "unassigned".}
 
-\item{recompute_alignment}{Recompute alignment?}
+\item{max.iter.harmony}{Maximum number of clustering iterations by harmony}
 }
 \value{
 A Seurat object with additional metadata columns with prediction probabilities associated to each
